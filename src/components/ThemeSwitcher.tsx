@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-type Theme = 'light' | 'dark' | 'green' | 'brown';
+type Theme = 'light' | 'dark' | 'green' | 'brown' | 'standoff';
 
 export const ThemeSwitcher = () => {
   const [theme, setTheme] = useState<Theme>('light');
@@ -21,7 +21,7 @@ export const ThemeSwitcher = () => {
 
   const applyTheme = (newTheme: Theme) => {
     const root = document.documentElement;
-    root.classList.remove('light', 'dark', 'green', 'brown');
+    root.classList.remove('light', 'dark', 'green', 'brown', 'standoff');
     
     if (newTheme === 'dark') {
       root.classList.add('dark');
@@ -29,6 +29,8 @@ export const ThemeSwitcher = () => {
       root.classList.add('green');
     } else if (newTheme === 'brown') {
       root.classList.add('brown');
+    } else if (newTheme === 'standoff') {
+      root.classList.add('standoff');
     }
   };
 
@@ -48,6 +50,8 @@ export const ThemeSwitcher = () => {
         return 'Leaf';
       case 'brown':
         return 'Coffee';
+      case 'standoff':
+        return 'Target';
       default:
         return 'Sun';
     }
@@ -63,6 +67,8 @@ export const ThemeSwitcher = () => {
         return 'Зеленая';
       case 'brown':
         return 'Коричневая';
+      case 'standoff':
+        return 'Standoff 2';
       default:
         return 'Светлая';
     }
@@ -108,6 +114,13 @@ export const ThemeSwitcher = () => {
           >
             <Icon name="Coffee" size={18} />
             <span>Коричневая</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => changeTheme('standoff')}
+            className="cursor-pointer gap-2"
+          >
+            <Icon name="Target" size={18} />
+            <span>Standoff 2</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -142,6 +142,36 @@
     --input: 30 15% 85%;
     --ring: 25 75% 47%;
   }
+
+  .standoff {
+    --background: 220 20% 12%;
+    --foreground: 45 100% 95%;
+
+    --card: 220 18% 18%;
+    --card-foreground: 45 100% 95%;
+
+    --popover: 220 18% 18%;
+    --popover-foreground: 45 100% 95%;
+
+    --primary: 30 100% 50%;
+    --primary-foreground: 220 20% 10%;
+
+    --secondary: 200 40% 25%;
+    --secondary-foreground: 45 100% 95%;
+
+    --muted: 220 15% 22%;
+    --muted-foreground: 45 30% 70%;
+
+    --accent: 30 100% 50%;
+    --accent-foreground: 220 20% 10%;
+
+    --destructive: 0 80% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 70% 35%;
+    --input: 220 15% 25%;
+    --ring: 30 100% 50%;
+  }
 }
 
 @layer base {
@@ -168,5 +198,32 @@
     50% {
       opacity: 0.5;
     }
+  }
+
+  .standoff .container {
+    position: relative;
+  }
+
+  .standoff .container::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
+  }
+
+  .standoff button,
+  .standoff .card {
+    border: 2px solid rgba(255, 153, 0, 0.5);
+    box-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
+    backdrop-filter: blur(10px);
+  }
+
+  .standoff h1,
+  .standoff h2,
+  .standoff h3,
+  .standoff h4 {
+    color: #ff9900;
+    text-shadow: 0 0 10px rgba(255, 153, 0, 0.5);
   }
 }

@@ -19,11 +19,13 @@ const Index = () => {
   });
   const [microphoneName, setMicrophoneName] = useState<string>('');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [maxLevelDetected, setMaxLevelDetected] = useState(0);
   
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const animationRef = useRef<number | null>(null);
+  const checkTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     detectDeviceInfo();
@@ -81,6 +83,7 @@ const Index = () => {
       source.connect(analyser);
       
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      let localMaxLevel = 0;
       
       const updateLevel = () => {
         analyser.getByteFrequencyData(dataArray);
@@ -88,20 +91,25 @@ const Index = () => {
         const normalizedLevel = Math.min(100, (average / 128) * 100);
         setAudioLevel(normalizedLevel);
         
+        if (normalizedLevel > localMaxLevel) {
+          localMaxLevel = normalizedLevel;
+          setMaxLevelDetected(normalizedLevel);
+        }
+        
         animationRef.current = requestAnimationFrame(updateLevel);
       };
       
       updateLevel();
       
-      setTimeout(() => {
-        if (audioLevel > 5) {
+      checkTimerRef.current = setTimeout(() => {
+        if (localMaxLevel > 1) {
           setTestStatus('success');
           toast.success('Микрофон работает отлично!');
         } else {
           setTestStatus('error');
           toast.error('Микрофон не улавливает звук');
         }
-      }, 3000);
+      }, 5000);
       
     } catch (error) {
       console.error('Ошибка доступа к микрофону:', error);
@@ -116,6 +124,11 @@ const Index = () => {
       cancelAnimationFrame(animationRef.current);
     }
     
+    if (checkTimerRef.current) {
+      clearTimeout(checkTimerRef.current);
+      checkTimerRef.current = null;
+    }
+    
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
@@ -128,6 +141,7 @@ const Index = () => {
     
     setTestStatus('idle');
     setAudioLevel(0);
+    setMaxLevelDetected(0);
   };
 
   const getOSInstructions = () => {

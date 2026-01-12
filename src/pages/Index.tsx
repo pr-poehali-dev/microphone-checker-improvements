@@ -8,6 +8,7 @@ import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { SecretCasino } from '@/components/SecretCasino';
+import { VolumeControl } from '@/components/VolumeControl';
 import { useStandoffSounds } from '@/hooks/useStandoffSounds';
 
 type TestStatus = 'idle' | 'testing' | 'success' | 'error';
@@ -23,9 +24,25 @@ const Index = () => {
   const [microphoneName, setMicrophoneName] = useState<string>('');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [currentTheme, setCurrentTheme] = useState<string>('light');
+  const [soundVolume, setSoundVolume] = useState(0.3);
 
   // Включаем звуки только для темы Standoff 2
-  useStandoffSounds(currentTheme === 'standoff');
+  useStandoffSounds(currentTheme === 'standoff', soundVolume);
+
+  useEffect(() => {
+    // Отслеживаем изменение громкости
+    const handleVolumeChange = () => {
+      const volume = parseFloat(localStorage.getItem('standoff-volume') || '0.3');
+      setSoundVolume(volume);
+    };
+
+    handleVolumeChange();
+    window.addEventListener('standoff-volume-change', handleVolumeChange);
+
+    return () => {
+      window.removeEventListener('standoff-volume-change', handleVolumeChange);
+    };
+  }, []);
   const [maxLevelDetected, setMaxLevelDetected] = useState(0);
   
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -485,6 +502,7 @@ const Index = () => {
         </Card>
       </div>
       <SecretCasino />
+      <VolumeControl />
     </div>
   );
 };

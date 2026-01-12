@@ -8,7 +8,7 @@ const SOUNDS = {
   error: 'https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3', // Ошибка
 };
 
-export const useStandoffSounds = (enabled: boolean) => {
+export const useStandoffSounds = (enabled: boolean, volume: number = 0.3) => {
   useEffect(() => {
     if (!enabled) return;
 
@@ -17,10 +17,20 @@ export const useStandoffSounds = (enabled: boolean) => {
     // Предзагрузка звуков
     Object.entries(SOUNDS).forEach(([key, url]) => {
       const audio = new Audio(url);
-      audio.volume = 0.3;
+      audio.volume = volume;
       audio.preload = 'auto';
       audioCache[key] = audio;
     });
+
+    // Обновление громкости при изменении
+    const updateVolume = () => {
+      const savedVolume = parseFloat(localStorage.getItem('standoff-volume') || '0.3');
+      Object.values(audioCache).forEach(audio => {
+        audio.volume = savedVolume;
+      });
+    };
+
+    window.addEventListener('standoff-volume-change', updateVolume);
 
     const playSound = (soundKey: string) => {
       const audio = audioCache[soundKey];
@@ -65,8 +75,9 @@ export const useStandoffSounds = (enabled: boolean) => {
       document.removeEventListener('mouseover', handleMouseOver, true);
       window.removeEventListener('standoff-success', handleSuccess);
       window.removeEventListener('standoff-error', handleError);
+      window.removeEventListener('standoff-volume-change', updateVolume);
     };
-  }, [enabled]);
+  }, [enabled, volume]);
 };
 
 // Утилиты для триггера звуков из компонентов

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -25,15 +26,29 @@ export const MicrophoneTest = ({
   onStart,
   onStop
 }: MicrophoneTestProps) => {
+  const [isStandoff, setIsStandoff] = useState(false);
+
+  useEffect(() => {
+    const checkTheme = () => {
+      const theme = localStorage.getItem('theme');
+      setIsStandoff(theme === 'standoff');
+    };
+
+    checkTheme();
+    const interval = setInterval(checkTheme, 500);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Card className="mb-8 shadow-lg">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Icon name="TestTube" size={24} className="text-primary" />
-          Тестирование
+          {isStandoff ? 'TESTING' : 'Тестирование'}
         </CardTitle>
         <CardDescription>
-          Проверьте работу микрофона в реальном времени
+          {isStandoff ? 'Check your mic in real-time' : 'Проверьте работу микрофона в реальном времени'}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -45,7 +60,7 @@ export const MicrophoneTest = ({
               className="flex-1 h-14 text-lg"
             >
               <Icon name="Play" className="mr-2" size={24} />
-              Начать тест
+              {isStandoff ? 'START TEST' : 'Начать тест'}
             </Button>
           ) : (
             <Button 
@@ -55,7 +70,7 @@ export const MicrophoneTest = ({
               className="flex-1 h-14 text-lg"
             >
               <Icon name="Square" className="mr-2" size={24} />
-              Остановить
+              {isStandoff ? 'STOP' : 'Остановить'}
             </Button>
           )}
         </div>
@@ -63,14 +78,16 @@ export const MicrophoneTest = ({
         {testStatus === 'testing' && (
           <div className="space-y-4 animate-fade-in">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Уровень сигнала</span>
+              <span className="text-muted-foreground">{isStandoff ? 'SIGNAL LEVEL' : 'Уровень сигнала'}</span>
               <span className="font-semibold text-primary">{Math.round(audioLevel)}%</span>
             </div>
             <Progress value={audioLevel} className="h-3" />
             <Alert className="bg-blue-50 border-blue-200">
               <Icon name="Info" className="text-blue-600" />
               <AlertDescription className="text-blue-800">
-                Говорите в микрофон. Полоска должна реагировать на ваш голос.
+                {isStandoff 
+                  ? 'Speak into mic. Bar should react to your voice.'
+                  : 'Говорите в микрофон. Полоска должна реагировать на ваш голос.'}
               </AlertDescription>
             </Alert>
           </div>
@@ -81,7 +98,9 @@ export const MicrophoneTest = ({
             <Alert className="bg-green-50 border-green-200">
               <Icon name="CheckCircle2" className="text-green-600" />
               <AlertDescription className="text-green-800">
-                Отлично! Ваш микрофон работает исправно.
+                {isStandoff 
+                  ? 'Perfect! Your microphone is working properly.'
+                  : 'Отлично! Ваш микрофон работает исправно.'}
               </AlertDescription>
             </Alert>
             
@@ -89,18 +108,18 @@ export const MicrophoneTest = ({
               <CardContent className="pt-6">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Устройство:</span>
+                    <span className="text-sm text-muted-foreground">{isStandoff ? 'DEVICE:' : 'Устройство:'}</span>
                     <span className="font-medium">{microphoneName}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Максимальный уровень:</span>
+                    <span className="text-sm text-muted-foreground">{isStandoff ? 'MAX LEVEL:' : 'Максимальный уровень:'}</span>
                     <span className="font-medium text-green-600">{Math.round(maxLevelDetected)}%</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Статус:</span>
+                    <span className="text-sm text-muted-foreground">{isStandoff ? 'STATUS:' : 'Статус:'}</span>
                     <span className="font-medium text-green-600 flex items-center gap-1">
                       <Icon name="Check" size={16} />
-                      Работает
+                      {isStandoff ? 'WORKING' : 'Работает'}
                     </span>
                   </div>
                 </div>
@@ -113,7 +132,9 @@ export const MicrophoneTest = ({
           <Alert className="bg-red-50 border-red-200">
             <Icon name="AlertCircle" className="text-red-600" />
             <AlertDescription className="text-red-800">
-              Микрофон не работает или не улавливает звук. Проверьте настройки ниже.
+              {isStandoff 
+                ? 'Mic not working or not detecting sound. Check settings below.'
+                : 'Микрофон не работает или не улавливает звук. Проверьте настройки ниже.'}
             </AlertDescription>
           </Alert>
         )}
@@ -122,7 +143,9 @@ export const MicrophoneTest = ({
           <Alert className="bg-orange-50 border-orange-200">
             <Icon name="ShieldAlert" className="text-orange-600" />
             <AlertDescription className="text-orange-800">
-              Доступ к микрофону заблокирован. Разрешите доступ в настройках браузера.
+              {isStandoff 
+                ? 'Mic access blocked. Allow access in browser settings.'
+                : 'Доступ к микрофону заблокирован. Разрешите доступ в настройках браузера.'}
             </AlertDescription>
           </Alert>
         )}

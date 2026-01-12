@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import '../styles/standoff-theme.css';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import {
@@ -12,16 +13,31 @@ type Theme = 'light' | 'dark' | 'green' | 'brown' | 'standoff';
 
 export const ThemeSwitcher = () => {
   const [theme, setTheme] = useState<Theme>('light');
+  const [isStandoffUnlocked, setIsStandoffUnlocked] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as Theme || 'light';
     setTheme(savedTheme);
     applyTheme(savedTheme);
+    
+    // Проверяем, разблокирована ли тема Standoff 2
+    const testCount = parseInt(localStorage.getItem('mic-test-count') || '0');
+    setIsStandoffUnlocked(testCount >= 22);
+    
+    // Слушаем событие разблокировки
+    const handleUnlock = () => {
+      setIsStandoffUnlocked(true);
+    };
+    window.addEventListener('standoff-theme-unlocked', handleUnlock);
+    
+    return () => {
+      window.removeEventListener('standoff-theme-unlocked', handleUnlock);
+    };
   }, []);
 
   const applyTheme = (newTheme: Theme) => {
     const root = document.documentElement;
-    root.classList.remove('light', 'dark', 'green', 'brown', 'standoff');
+    root.classList.remove('light', 'dark', 'green', 'brown', 'standoff-theme');
     
     if (newTheme === 'dark') {
       root.classList.add('dark');
@@ -30,11 +46,16 @@ export const ThemeSwitcher = () => {
     } else if (newTheme === 'brown') {
       root.classList.add('brown');
     } else if (newTheme === 'standoff') {
-      root.classList.add('standoff');
+      root.classList.add('standoff-theme');
     }
   };
 
   const changeTheme = (newTheme: Theme) => {
+    // Проверяем разблокировку для темы Standoff 2
+    if (newTheme === 'standoff' && !isStandoffUnlocked) {
+      return;
+    }
+    
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
     applyTheme(newTheme);
@@ -117,10 +138,13 @@ export const ThemeSwitcher = () => {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => changeTheme('standoff')}
-            className="cursor-pointer gap-2"
+            disabled={!isStandoffUnlocked}
+            className={`gap-2 ${isStandoffUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
           >
-            <Icon name="Target" size={18} />
-            <span>Standoff 2</span>
+            <Icon name={isStandoffUnlocked ? 'Target' : 'Lock'} size={18} className={isStandoffUnlocked ? '' : 'text-gray-400'} />
+            <span className={isStandoffUnlocked ? '' : 'text-gray-400'}>
+              {isStandoffUnlocked ? 'Standoff 2' : 'Секретная тема'}
+            </span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

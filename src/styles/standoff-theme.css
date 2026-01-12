@@ -1,0 +1,78 @@
+/* Независимая тема Standoff 2 */
+.standoff-theme {
+  --standoff-background: 220 20% 12%;
+  --standoff-foreground: 45 100% 95%;
+  --standoff-card: 220 18% 18%;
+  --standoff-card-foreground: 45 100% 95%;
+  --standoff-popover: 220 18% 18%;
+  --standoff-popover-foreground: 45 100% 95%;
+  --standoff-primary: 30 100% 50%;
+  --standoff-primary-foreground: 220 20% 10%;
+  --standoff-secondary: 200 40% 25%;
+  --standoff-secondary-foreground: 45 100% 95%;
+  --standoff-muted: 220 15% 22%;
+  --standoff-muted-foreground: 45 30% 70%;
+  --standoff-accent: 30 100% 50%;
+  --standoff-accent-foreground: 220 20% 10%;
+  --standoff-destructive: 0 80% 50%;
+  --standoff-destructive-foreground: 0 0% 100%;
+  --standoff-border: 30 70% 35%;
+  --standoff-input: 220 15% 25%;
+  --standoff-ring: 30 100% 50%;
+
+  background-color: hsl(var(--standoff-background));
+  color: hsl(var(--standoff-foreground));
+  background-image: url("https://cdn.poehali.dev/files/Снимок%20экрана%202026-01-12%20103446.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.standoff-theme .container {
+  position: relative;
+}
+
+.standoff-theme .container::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: -1;
+}
+
+.standoff-theme button,
+.standoff-theme .card {
+  border: 2px solid rgba(255, 153, 0, 0.5);
+  box-shadow: 0 0 20px rgba(255, 153, 0, 0.3);
+  backdrop-filter: blur(10px);
+  background-color: hsl(var(--standoff-card));
+  color: hsl(var(--standoff-card-foreground));
+}
+
+.standoff-theme h1,
+.standoff-theme h2,
+.standoff-theme h3,
+.standoff-theme h4 {
+  color: #ff9900;
+  text-shadow: 0 0 10px rgba(255, 153, 0, 0.5);
+}
+
+.standoff-theme .bg-card {
+  background-color: hsl(var(--standoff-card));
+}
+
+.standoff-theme .text-card-foreground {
+  color: hsl(var(--standoff-card-foreground));
+}
+
+.standoff-theme .bg-primary {
+  background-color: hsl(var(--standoff-primary));
+}
+
+.standoff-theme .text-primary-foreground {
+  color: hsl(var(--standoff-primary-foreground));
+}
+
+.standoff-theme .border-border {
+  border-color: hsl(var(--standoff-border));
+}

@@ -46,6 +46,16 @@ export const useMicrophoneTest = () => {
 
   const startMicTest = async () => {
     try {
+      // Увеличиваем счетчик запусков теста
+      const currentCount = parseInt(localStorage.getItem('mic-test-count') || '0');
+      localStorage.setItem('mic-test-count', String(currentCount + 1));
+      
+      // Уведомляем о разблокировке секретной темы
+      if (currentCount + 1 === 22) {
+        window.dispatchEvent(new Event('standoff-theme-unlocked'));
+        toast.success('🎉 Секретная тема разблокирована!');
+      }
+      
       setTestStatus('testing');
       
       const stream = await navigator.mediaDevices.getUserMedia({ 

@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -12,19 +11,6 @@ interface DeviceInstructionsProps {
 }
 
 export const DeviceInstructions = ({ os, browser }: DeviceInstructionsProps) => {
-  const [isStandoff, setIsStandoff] = useState(false);
-
-  useEffect(() => {
-    const checkTheme = () => {
-      const theme = localStorage.getItem('theme');
-      setIsStandoff(theme === 'standoff');
-    };
-
-    checkTheme();
-    const interval = setInterval(checkTheme, 500);
-
-    return () => clearInterval(interval);
-  }, []);
   const getOSInstructions = () => {
     const instructions = {
       Windows: [
@@ -74,17 +60,17 @@ export const DeviceInstructions = ({ os, browser }: DeviceInstructionsProps) => 
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Icon name="Info" size={24} className="text-primary" />
-            {isStandoff ? 'SYSTEM INFO' : 'Информация о системе'}
+            Информация о системе
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground mb-1">{isStandoff ? 'OS' : 'Операционная система'}</p>
+              <p className="text-sm text-muted-foreground mb-1">Операционная система</p>
               <p className="font-semibold text-lg">{os}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-1">{isStandoff ? 'BROWSER' : 'Браузер'}</p>
+              <p className="text-sm text-muted-foreground mb-1">Браузер</p>
               <p className="font-semibold text-lg">{browser}</p>
             </div>
           </div>
@@ -95,11 +81,11 @@ export const DeviceInstructions = ({ os, browser }: DeviceInstructionsProps) => 
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="settings">
             <Icon name="Settings" size={18} className="mr-2" />
-            {isStandoff ? 'SETTINGS' : 'Настройки'}
+            Настройки
           </TabsTrigger>
           <TabsTrigger value="tips">
             <Icon name="Lightbulb" size={18} className="mr-2" />
-            {isStandoff ? 'TIPS' : 'Советы'}
+            Советы
           </TabsTrigger>
         </TabsList>
 
@@ -191,11 +177,9 @@ export const DeviceInstructions = ({ os, browser }: DeviceInstructionsProps) => 
               <Icon name="HelpCircle" size={24} className="text-primary" />
             </div>
             <div>
-              <h3 className="font-semibold text-lg mb-2">{isStandoff ? 'NEED HELP?' : 'Нужна помощь?'}</h3>
+              <h3 className="font-semibold text-lg mb-2">Нужна помощь?</h3>
               <p className="text-muted-foreground mb-4">
-                {isStandoff 
-                  ? 'If problem persists, try restarting computer or contact device manufacturer support. Promo for bonus: type "casino" on keyboard.'
-                  : 'Если проблема не решается, попробуйте перезагрузить компьютер или обратитесь в службу поддержки производителя устройства.'}
+                Если проблема не решается, попробуйте перезагрузить компьютер или обратитесь в службу поддержки производителя устройства.
               </p>
               <Button 
                 variant="outline" 
@@ -203,7 +187,7 @@ export const DeviceInstructions = ({ os, browser }: DeviceInstructionsProps) => 
                 onClick={() => window.open('https://support.google.com/chrome/answer/2693767', '_blank')}
               >
                 <Icon name="ExternalLink" size={18} />
-                {isStandoff ? 'CONTACT SUPPORT' : 'Связаться с поддержкой'}
+                Связаться с поддержкой
               </Button>
             </div>
           </div>

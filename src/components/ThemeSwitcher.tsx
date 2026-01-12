@@ -14,33 +14,24 @@ type Theme = 'light' | 'dark' | 'green' | 'brown' | 'standoff';
 export const ThemeSwitcher = () => {
   const [theme, setTheme] = useState<Theme>('light');
   const [isStandoffUnlocked, setIsStandoffUnlocked] = useState(false);
-  const [testCount, setTestCount] = useState(0);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as Theme || 'light';
     setTheme(savedTheme);
     applyTheme(savedTheme);
     
-    // Обновляем прогресс разблокировки
-    const updateProgress = () => {
-      const count = parseInt(localStorage.getItem('mic-test-count') || '0');
-      setTestCount(count);
-      setIsStandoffUnlocked(count >= 22);
+    // Проверяем, разблокирована ли тема Standoff 2
+    const testCount = parseInt(localStorage.getItem('mic-test-count') || '0');
+    setIsStandoffUnlocked(testCount >= 22);
+    
+    // Слушаем событие разблокировки
+    const handleUnlock = () => {
+      setIsStandoffUnlocked(true);
     };
-    
-    updateProgress();
-    
-    // Слушаем события разблокировки и изменений
-    window.addEventListener('standoff-theme-unlocked', updateProgress);
-    window.addEventListener('storage', updateProgress);
-    
-    // Обновляем каждые 500мс
-    const interval = setInterval(updateProgress, 500);
+    window.addEventListener('standoff-theme-unlocked', handleUnlock);
     
     return () => {
-      window.removeEventListener('standoff-theme-unlocked', updateProgress);
-      window.removeEventListener('storage', updateProgress);
-      clearInterval(interval);
+      window.removeEventListener('standoff-theme-unlocked', handleUnlock);
     };
   }, []);
 
@@ -116,7 +107,7 @@ export const ThemeSwitcher = () => {
             <Icon name={getThemeIcon(theme)} size={24} />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuContent align="end" className="w-40">
           <DropdownMenuItem
             onClick={() => changeTheme('light')}
             className="cursor-pointer gap-2"
@@ -148,19 +139,12 @@ export const ThemeSwitcher = () => {
           <DropdownMenuItem
             onClick={() => changeTheme('standoff')}
             disabled={!isStandoffUnlocked}
-            className={`gap-2 flex-col items-start py-3 ${isStandoffUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
+            className={`gap-2 ${isStandoffUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
           >
-            <div className="flex items-center gap-2 w-full">
-              <Icon name={isStandoffUnlocked ? 'Target' : 'Lock'} size={18} className={isStandoffUnlocked ? '' : 'text-gray-400'} />
-              <span className={isStandoffUnlocked ? '' : 'text-gray-400'}>
-                {isStandoffUnlocked ? 'Standoff 2' : 'Секретная тема'}
-              </span>
-            </div>
-            {!isStandoffUnlocked && (
-              <div className="text-xs text-gray-400 mt-1 w-full">
-                Прогресс: {testCount}/22
-              </div>
-            )}
+            <Icon name={isStandoffUnlocked ? 'Target' : 'Lock'} size={18} className={isStandoffUnlocked ? '' : 'text-gray-400'} />
+            <span className={isStandoffUnlocked ? '' : 'text-gray-400'}>
+              {isStandoffUnlocked ? 'Standoff 2' : 'Секретная тема'}
+            </span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

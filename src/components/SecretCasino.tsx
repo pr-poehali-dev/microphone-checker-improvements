@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
-import { useStandoffSounds } from '@/hooks/useStandoffSounds';
 
 const SYMBOLS = ['🍒', '🍋', '💎', '7️⃣', '⭐', '🔔'];
 const BET_OPTIONS = [10, 25, 50, 100, 250];

@@ -6,6 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
+import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 
 type TestStatus = 'idle' | 'testing' | 'success' | 'error';
 type OSType = 'Windows' | 'macOS' | 'Linux' | 'iOS' | 'Android' | 'Unknown';
@@ -188,7 +189,8 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 green:from-green-50 green:via-white green:to-green-50">
+      <ThemeSwitcher />
       <div className="container max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12 animate-fade-in">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-primary/10 rounded-full mb-6">

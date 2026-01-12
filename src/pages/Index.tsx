@@ -62,7 +62,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 green:from-green-50 green:via-white green:to-green-50 brown:from-amber-50 brown:via-orange-50 brown:to-yellow-50 standoff:from-slate-900 standoff:via-orange-950 standoff:to-slate-800 standoff:bg-[url('https://i.imgur.com/8Zqx5xY.jpg')] standoff:bg-cover standoff:bg-center standoff:bg-fixed">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 green:from-green-50 green:via-white green:to-green-50 brown:from-amber-50 brown:via-orange-50 brown:to-yellow-50 standoff:from-slate-900 standoff:via-orange-950 standoff:to-slate-800 standoff:bg-[url('https://cdn.poehali.dev/files/image.png')] standoff:bg-cover standoff:bg-center standoff:bg-fixed">
       <ThemeSwitcher />
       <div className="container max-w-4xl mx-auto px-4 py-12">
         <MicrophoneHeader />

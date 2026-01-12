@@ -432,7 +432,11 @@ const Index = () => {
                 <p className="text-muted-foreground mb-4">
                   Если проблема не решается, попробуйте перезагрузить компьютер или обратитесь в службу поддержки производителя устройства.
                 </p>
-                <Button variant="outline" className="gap-2">
+                <Button 
+                  variant="outline" 
+                  className="gap-2"
+                  onClick={() => window.open('https://t.me/domestosiik', '_blank')}
+                >
                   <Icon name="ExternalLink" size={18} />
                   Связаться с поддержкой
                 </Button>

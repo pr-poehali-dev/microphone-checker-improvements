@@ -189,7 +189,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 green:from-green-50 green:via-white green:to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 green:from-green-50 green:via-white green:to-green-50 dark-green:from-emerald-950 dark-green:via-green-950 dark-green:to-teal-950">
       <ThemeSwitcher />
       <div className="container max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-12 animate-fade-in">

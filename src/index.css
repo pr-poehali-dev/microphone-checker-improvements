@@ -112,6 +112,36 @@
     --input: 140 20% 88%;
     --ring: 142 76% 36%;
   }
+
+  .dark-green {
+    --background: 140 30% 8%;
+    --foreground: 140 20% 95%;
+
+    --card: 140 25% 12%;
+    --card-foreground: 140 20% 96%;
+
+    --popover: 140 25% 14%;
+    --popover-foreground: 140 10% 95%;
+
+    --primary: 142 70% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 140 20% 18%;
+    --secondary-foreground: 140 10% 90%;
+
+    --muted: 140 15% 18%;
+    --muted-foreground: 140 10% 65%;
+
+    --accent: 142 76% 36%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 140 20% 25%;
+    --input: 140 20% 25%;
+    --ring: 142 76% 45%;
+  }
 }
 
 @layer base {

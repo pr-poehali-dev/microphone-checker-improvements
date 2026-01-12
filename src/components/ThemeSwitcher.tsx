@@ -8,7 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-type Theme = 'light' | 'dark' | 'green';
+type Theme = 'light' | 'dark' | 'green' | 'dark-green';
 
 export const ThemeSwitcher = () => {
   const [theme, setTheme] = useState<Theme>('light');
@@ -21,12 +21,14 @@ export const ThemeSwitcher = () => {
 
   const applyTheme = (newTheme: Theme) => {
     const root = document.documentElement;
-    root.classList.remove('light', 'dark', 'green');
+    root.classList.remove('light', 'dark', 'green', 'dark-green');
     
     if (newTheme === 'dark') {
       root.classList.add('dark');
     } else if (newTheme === 'green') {
       root.classList.add('green');
+    } else if (newTheme === 'dark-green') {
+      root.classList.add('dark-green');
     }
   };
 
@@ -44,6 +46,8 @@ export const ThemeSwitcher = () => {
         return 'Moon';
       case 'green':
         return 'Leaf';
+      case 'dark-green':
+        return 'Trees';
       default:
         return 'Sun';
     }
@@ -57,6 +61,8 @@ export const ThemeSwitcher = () => {
         return 'Темная';
       case 'green':
         return 'Зеленая';
+      case 'dark-green':
+        return 'Тёмно-зелёная';
       default:
         return 'Светлая';
     }
@@ -95,6 +101,13 @@ export const ThemeSwitcher = () => {
           >
             <Icon name="Leaf" size={18} />
             <span>Зеленая</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => changeTheme('dark-green')}
+            className="cursor-pointer gap-2"
+          >
+            <Icon name="Trees" size={18} />
+            <span>Тёмно-зелёная</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

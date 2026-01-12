@@ -36,22 +36,22 @@ export const useStandoffSounds = (enabled: boolean) => {
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       
-      if (target.tagName === 'BUTTON' || target.closest('button')) {
+      if (target && target.tagName === 'BUTTON' || (target && typeof target.closest === 'function' && target.closest('button'))) {
         playSound('click');
       }
     };
 
     // Обработчик наведения на кнопки
-    const handleMouseEnter = (e: MouseEvent) => {
+    const handleMouseOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       
-      if (target.tagName === 'BUTTON' || target.closest('button')) {
+      if (target && target.tagName === 'BUTTON' || (target && typeof target.closest === 'function' && target.closest('button'))) {
         playSound('hover');
       }
     };
 
     document.addEventListener('click', handleClick, true);
-    document.addEventListener('mouseenter', handleMouseEnter, true);
+    document.addEventListener('mouseover', handleMouseOver, true);
 
     // Слушаем события успеха/ошибки через кастомные события
     const handleSuccess = () => playSound('success');
@@ -62,7 +62,7 @@ export const useStandoffSounds = (enabled: boolean) => {
 
     return () => {
       document.removeEventListener('click', handleClick, true);
-      document.removeEventListener('mouseenter', handleMouseEnter, true);
+      document.removeEventListener('mouseover', handleMouseOver, true);
       window.removeEventListener('standoff-success', handleSuccess);
       window.removeEventListener('standoff-error', handleError);
     };

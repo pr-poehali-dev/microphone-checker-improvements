@@ -2,15 +2,12 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
-import { useStandoffSounds } from '@/hooks/useStandoffSounds';
 
 const SYMBOLS = ['🍒', '🍋', '💎', '7️⃣', '⭐', '🔔'];
-const BET_OPTIONS = [10, 25, 50, 100, 250];
 
 export const SecretCasino = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [balance, setBalance] = useState(1000);
-  const [bet, setBet] = useState(10);
   const [reels, setReels] = useState(['🍒', '🍒', '🍒']);
   const [spinning, setSpinning] = useState(false);
   const [message, setMessage] = useState('');
@@ -33,13 +30,13 @@ export const SecretCasino = () => {
   }, [keySequence]);
 
   const spin = () => {
-    if (balance < bet) {
+    if (balance < 10) {
       setMessage('❌ Недостаточно монет!');
       return;
     }
 
     setSpinning(true);
-    setBalance(balance - bet);
+    setBalance(balance - 10);
     setMessage('🎰 Крутим...');
 
     let spins = 0;
@@ -69,17 +66,15 @@ export const SecretCasino = () => {
     
     setReels(finalReels);
 
-    // Проверка выигрыша с учетом ставки
+    // Проверка выигрыша
     if (finalReels[0] === finalReels[1] && finalReels[1] === finalReels[2]) {
-      const baseWin = finalReels[0] === '💎' ? 50 : 
-                      finalReels[0] === '7️⃣' ? 30 : 10;
-      const winAmount = baseWin * bet;
+      const winAmount = finalReels[0] === '💎' ? 500 : 
+                       finalReels[0] === '7️⃣' ? 300 : 100;
       setBalance(balance => balance + winAmount);
       setMessage(`🎉 ДЖЕКПОТ! +${winAmount} монет!`);
     } else if (finalReels[0] === finalReels[1] || finalReels[1] === finalReels[2]) {
-      const winAmount = bet * 2;
-      setBalance(balance => balance + winAmount);
-      setMessage(`✨ Два символа! +${winAmount} монет`);
+      setBalance(balance => balance + 20);
+      setMessage('✨ Два символа! +20 монет');
     } else {
       setMessage('😢 Попробуй ещё раз!');
     }
@@ -112,26 +107,9 @@ export const SecretCasino = () => {
           </div>
         </CardHeader>
         <CardContent className="p-6 space-y-6">
-          <div className="text-center space-y-3">
-            <div className="text-2xl font-bold">💰 Баланс: {balance} монет</div>
-            
-            <div>
-              <div className="text-sm text-muted-foreground mb-2">Выберите ставку:</div>
-              <div className="flex justify-center gap-2 flex-wrap">
-                {BET_OPTIONS.map((betOption) => (
-                  <Button
-                    key={betOption}
-                    size="sm"
-                    variant={bet === betOption ? 'default' : 'outline'}
-                    onClick={() => setBet(betOption)}
-                    disabled={spinning || balance < betOption}
-                    className={bet === betOption ? 'bg-yellow-500 hover:bg-yellow-600' : ''}
-                  >
-                    {betOption}
-                  </Button>
-                ))}
-              </div>
-            </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold mb-2">💰 Баланс: {balance} монет</div>
+            <div className="text-sm text-muted-foreground">Ставка: 10 монет</div>
           </div>
 
           <div className="flex justify-center gap-4 bg-gradient-to-b from-purple-600 to-purple-800 p-8 rounded-lg shadow-inner">
@@ -154,7 +132,7 @@ export const SecretCasino = () => {
           <div className="space-y-3">
             <Button 
               onClick={spin} 
-              disabled={spinning || balance < bet}
+              disabled={spinning || balance < 10}
               className="w-full h-14 text-xl bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
             >
               {spinning ? (
@@ -165,7 +143,7 @@ export const SecretCasino = () => {
               ) : (
                 <>
                   <Icon name="Play" className="mr-2" size={24} />
-                  Крутить ({bet} монет)
+                  Крутить (10 монет)
                 </>
               )}
             </Button>
@@ -183,9 +161,8 @@ export const SecretCasino = () => {
           </div>
 
           <div className="text-xs text-center text-muted-foreground space-y-1">
-            <div className="font-semibold">Коэффициенты выплат:</div>
-            <div>💎💎💎 = ставка × 50 | 7️⃣7️⃣7️⃣ = ставка × 30</div>
-            <div>Три одинаковых = ставка × 10 | Два одинаковых = ставка × 2</div>
+            <div>💎💎💎 = 500 монет | 7️⃣7️⃣7️⃣ = 300 монет</div>
+            <div>Три одинаковых = 100 монет | Два одинаковых = 20 монет</div>
           </div>
         </CardContent>
       </Card>

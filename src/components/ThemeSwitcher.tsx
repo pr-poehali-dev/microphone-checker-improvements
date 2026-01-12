@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import '../styles/standoff-theme.css';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import {
@@ -9,62 +8,29 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-type Theme = 'light' | 'dark' | 'green' | 'brown' | 'standoff';
+type Theme = 'light' | 'dark' | 'green';
 
 export const ThemeSwitcher = () => {
   const [theme, setTheme] = useState<Theme>('light');
-  const [isStandoffUnlocked, setIsStandoffUnlocked] = useState(false);
-  const [testCount, setTestCount] = useState(0);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as Theme || 'light';
     setTheme(savedTheme);
     applyTheme(savedTheme);
-    
-    // Обновляем прогресс разблокировки
-    const updateProgress = () => {
-      const count = parseInt(localStorage.getItem('mic-test-count') || '0');
-      setTestCount(count);
-      setIsStandoffUnlocked(count >= 22);
-    };
-    
-    updateProgress();
-    
-    // Слушаем события разблокировки и изменений
-    window.addEventListener('standoff-theme-unlocked', updateProgress);
-    window.addEventListener('storage', updateProgress);
-    
-    // Обновляем каждые 500мс
-    const interval = setInterval(updateProgress, 500);
-    
-    return () => {
-      window.removeEventListener('standoff-theme-unlocked', updateProgress);
-      window.removeEventListener('storage', updateProgress);
-      clearInterval(interval);
-    };
   }, []);
 
   const applyTheme = (newTheme: Theme) => {
     const root = document.documentElement;
-    root.classList.remove('light', 'dark', 'green', 'brown', 'standoff-theme');
+    root.classList.remove('light', 'dark', 'green');
     
     if (newTheme === 'dark') {
       root.classList.add('dark');
     } else if (newTheme === 'green') {
       root.classList.add('green');
-    } else if (newTheme === 'brown') {
-      root.classList.add('brown');
-    } else if (newTheme === 'standoff') {
-      root.classList.add('standoff-theme');
     }
   };
 
   const changeTheme = (newTheme: Theme) => {
-    // Проверяем разблокировку для темы Standoff 2
-    if (newTheme === 'standoff' && !isStandoffUnlocked) {
-      return;
-    }
-    
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
     applyTheme(newTheme);
@@ -78,10 +44,6 @@ export const ThemeSwitcher = () => {
         return 'Moon';
       case 'green':
         return 'Leaf';
-      case 'brown':
-        return 'Coffee';
-      case 'standoff':
-        return 'Target';
       default:
         return 'Sun';
     }
@@ -95,10 +57,6 @@ export const ThemeSwitcher = () => {
         return 'Темная';
       case 'green':
         return 'Зеленая';
-      case 'brown':
-        return 'Коричневая';
-      case 'standoff':
-        return 'Standoff 2';
       default:
         return 'Светлая';
     }
@@ -116,7 +74,7 @@ export const ThemeSwitcher = () => {
             <Icon name={getThemeIcon(theme)} size={24} />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuContent align="end" className="w-40">
           <DropdownMenuItem
             onClick={() => changeTheme('light')}
             className="cursor-pointer gap-2"
@@ -137,30 +95,6 @@ export const ThemeSwitcher = () => {
           >
             <Icon name="Leaf" size={18} />
             <span>Зеленая</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => changeTheme('brown')}
-            className="cursor-pointer gap-2"
-          >
-            <Icon name="Coffee" size={18} />
-            <span>Коричневая</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => changeTheme('standoff')}
-            disabled={!isStandoffUnlocked}
-            className={`gap-2 flex-col items-start py-3 ${isStandoffUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'}`}
-          >
-            <div className="flex items-center gap-2 w-full">
-              <Icon name={isStandoffUnlocked ? 'Target' : 'Lock'} size={18} className={isStandoffUnlocked ? '' : 'text-gray-400'} />
-              <span className={isStandoffUnlocked ? '' : 'text-gray-400'}>
-                {isStandoffUnlocked ? 'Standoff 2' : 'Секретная тема'}
-              </span>
-            </div>
-            {!isStandoffUnlocked && (
-              <div className="text-xs text-gray-400 mt-1 w-full">
-                Прогресс: {testCount}/22
-              </div>
-            )}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

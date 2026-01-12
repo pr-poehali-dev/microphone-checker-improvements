@@ -58,19 +58,16 @@ export const DeviceInstructions = ({ os, browser }: DeviceInstructionsProps) => 
     <>
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Icon name="Info" size={24} className="text-primary" />
-            Информация о системе
-          </CardTitle>
+          <CardTitle className="flex items-center gap-2"></CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Операционная система</p>
+              <p className="text-sm text-muted-foreground mb-1"></p>
               <p className="font-semibold text-lg">{os}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground mb-1">Браузер</p>
+              <p className="text-sm text-muted-foreground mb-1"></p>
               <p className="font-semibold text-lg">{browser}</p>
             </div>
           </div>
@@ -128,10 +125,8 @@ export const DeviceInstructions = ({ os, browser }: DeviceInstructionsProps) => 
                 <div className="flex gap-4">
                   <Icon name="Volume2" size={24} className="text-primary flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold mb-1">Проверьте громкость</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Убедитесь, что уровень громкости микрофона в системных настройках не на минимуме.
-                    </p>
+                    <h4 className="font-semibold mb-1">Проверьте стандофф</h4>
+                    <p className="text-sm text-muted-foreground">Убедитесь, что вы нажали промик casino на клавиатуре</p>
                   </div>
                 </div>
 

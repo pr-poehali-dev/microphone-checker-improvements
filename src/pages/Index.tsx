@@ -7,6 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
+import { SecretCasino } from '@/components/SecretCasino';
 
 type TestStatus = 'idle' | 'testing' | 'success' | 'error';
 type OSType = 'Windows' | 'macOS' | 'Linux' | 'iOS' | 'Android' | 'Unknown';
@@ -461,6 +462,7 @@ const Index = () => {
           </CardContent>
         </Card>
       </div>
+      <SecretCasino />
     </div>
   );
 };

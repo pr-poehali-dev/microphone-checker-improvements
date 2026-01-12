@@ -8,6 +8,7 @@ import Icon from '@/components/ui/icon';
 import { toast } from 'sonner';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { SecretCasino } from '@/components/SecretCasino';
+import { useStandoffSounds } from '@/hooks/useStandoffSounds';
 
 type TestStatus = 'idle' | 'testing' | 'success' | 'error';
 type OSType = 'Windows' | 'macOS' | 'Linux' | 'iOS' | 'Android' | 'Unknown';
@@ -21,6 +22,10 @@ const Index = () => {
   });
   const [microphoneName, setMicrophoneName] = useState<string>('');
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [currentTheme, setCurrentTheme] = useState<string>('light');
+
+  // Включаем звуки только для темы Standoff 2
+  useStandoffSounds(currentTheme === 'standoff');
   const [maxLevelDetected, setMaxLevelDetected] = useState(0);
   
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -31,6 +36,23 @@ const Index = () => {
 
   useEffect(() => {
     detectDeviceInfo();
+    
+    // Отслеживаем изменение темы
+    const checkTheme = () => {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      setCurrentTheme(savedTheme);
+    };
+    
+    checkTheme();
+    window.addEventListener('storage', checkTheme);
+    
+    // Проверяем тему каждую секунду (на случай изменения без storage event)
+    const interval = setInterval(checkTheme, 1000);
+    
+    return () => {
+      window.removeEventListener('storage', checkTheme);
+      clearInterval(interval);
+    };
   }, []);
 
   const detectDeviceInfo = () => {

@@ -1,0 +1,79 @@
+import { useEffect } from 'react';
+
+// URL звуковых эффектов (похожих на Standoff 2)
+const SOUNDS = {
+  click: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3', // Клик по кнопке
+  hover: 'https://assets.mixkit.co/active_storage/sfx/2570/2570-preview.mp3', // Наведение
+  success: 'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3', // Успех
+  error: 'https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3', // Ошибка
+};
+
+export const useStandoffSounds = (enabled: boolean) => {
+  useEffect(() => {
+    if (!enabled) return;
+
+    const audioCache: { [key: string]: HTMLAudioElement } = {};
+
+    // Предзагрузка звуков
+    Object.entries(SOUNDS).forEach(([key, url]) => {
+      const audio = new Audio(url);
+      audio.volume = 0.3;
+      audio.preload = 'auto';
+      audioCache[key] = audio;
+    });
+
+    const playSound = (soundKey: string) => {
+      const audio = audioCache[soundKey];
+      if (audio) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {
+          // Игнорируем ошибки автовоспроизведения
+        });
+      }
+    };
+
+    // Обработчик кликов
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        playSound('click');
+      }
+    };
+
+    // Обработчик наведения на кнопки
+    const handleMouseEnter = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        playSound('hover');
+      }
+    };
+
+    document.addEventListener('click', handleClick, true);
+    document.addEventListener('mouseenter', handleMouseEnter, true);
+
+    // Слушаем события успеха/ошибки через кастомные события
+    const handleSuccess = () => playSound('success');
+    const handleError = () => playSound('error');
+
+    window.addEventListener('standoff-success', handleSuccess);
+    window.addEventListener('standoff-error', handleError);
+
+    return () => {
+      document.removeEventListener('click', handleClick, true);
+      document.removeEventListener('mouseenter', handleMouseEnter, true);
+      window.removeEventListener('standoff-success', handleSuccess);
+      window.removeEventListener('standoff-error', handleError);
+    };
+  }, [enabled]);
+};
+
+// Утилиты для триггера звуков из компонентов
+export const triggerSuccessSound = () => {
+  window.dispatchEvent(new Event('standoff-success'));
+};
+
+export const triggerErrorSound = () => {
+  window.dispatchEvent(new Event('standoff-error'));
+};

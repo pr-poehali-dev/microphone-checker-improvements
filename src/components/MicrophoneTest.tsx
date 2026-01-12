@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -25,6 +26,29 @@ export const MicrophoneTest = ({
   onStart,
   onStop
 }: MicrophoneTestProps) => {
+  const [testCount, setTestCount] = useState(0);
+  const [showProgress, setShowProgress] = useState(false);
+
+  useEffect(() => {
+    const updateCount = () => {
+      const count = parseInt(localStorage.getItem('mic-test-count') || '0');
+      setTestCount(count);
+      setShowProgress(count > 0 && count < 22);
+    };
+
+    updateCount();
+    window.addEventListener('storage', updateCount);
+    window.addEventListener('standoff-theme-unlocked', updateCount);
+    
+    // Обновляем при каждом изменении статуса теста
+    const interval = setInterval(updateCount, 500);
+
+    return () => {
+      window.removeEventListener('storage', updateCount);
+      window.removeEventListener('standoff-theme-unlocked', updateCount);
+      clearInterval(interval);
+    };
+  }, []);
   return (
     <Card className="mb-8 shadow-lg">
       <CardHeader>
@@ -37,6 +61,15 @@ export const MicrophoneTest = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {showProgress && (
+          <Alert className="bg-purple-50 border-purple-200">
+            <Icon name="Lock" className="text-purple-600" />
+            <AlertDescription className="text-purple-800">
+              Прогресс разблокировки секретной темы: {testCount}/22
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="flex flex-col sm:flex-row gap-4">
           {testStatus === 'idle' || testStatus === 'error' ? (
             <Button 

@@ -1,16 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Slider } from '@/components/ui/slider';
+import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 
 export const VolumeControl = () => {
   const [volume, setVolume] = useState(30);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [previousVolume, setPreviousVolume] = useState(30);
 
   useEffect(() => {
     // Загружаем сохранённую громкость
     const savedVolume = parseFloat(localStorage.getItem('standoff-volume') || '0.3');
-    setVolume(savedVolume * 100);
+    const volumePercent = savedVolume * 100;
+    setVolume(volumePercent);
+    setPreviousVolume(volumePercent);
+    setIsMuted(volumePercent === 0);
 
     // Проверяем активность темы Standoff
     const checkTheme = () => {
@@ -27,12 +33,34 @@ export const VolumeControl = () => {
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0];
     setVolume(newVolume);
+    setIsMuted(newVolume === 0);
+    
+    if (newVolume > 0) {
+      setPreviousVolume(newVolume);
+    }
     
     // Сохраняем в localStorage
     const volumeDecimal = newVolume / 100;
     localStorage.setItem('standoff-volume', volumeDecimal.toString());
     
     // Уведомляем другие компоненты
+    window.dispatchEvent(new Event('standoff-volume-change'));
+  };
+
+  const toggleMute = () => {
+    if (isMuted) {
+      // Включаем звук
+      const restoreVolume = previousVolume || 30;
+      setVolume(restoreVolume);
+      setIsMuted(false);
+      localStorage.setItem('standoff-volume', (restoreVolume / 100).toString());
+    } else {
+      // Выключаем звук
+      setPreviousVolume(volume);
+      setVolume(0);
+      setIsMuted(true);
+      localStorage.setItem('standoff-volume', '0');
+    }
     window.dispatchEvent(new Event('standoff-volume-change'));
   };
 
@@ -48,12 +76,19 @@ export const VolumeControl = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center gap-4">
-            <Icon 
-              name={volume === 0 ? "VolumeX" : volume < 50 ? "Volume1" : "Volume2"} 
-              size={24} 
-              className="text-orange-400"
-            />
+          <div className="flex items-center gap-3">
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={toggleMute}
+              className="shrink-0 border-orange-500/50 hover:bg-orange-500/20"
+            >
+              <Icon 
+                name={isMuted ? "VolumeX" : volume < 50 ? "Volume1" : "Volume2"} 
+                size={20} 
+                className="text-orange-400"
+              />
+            </Button>
             <Slider
               value={[volume]}
               onValueChange={handleVolumeChange}
@@ -67,7 +102,7 @@ export const VolumeControl = () => {
           </div>
           
           <div className="text-xs text-muted-foreground text-center">
-            Регулирует звуки кликов, наведения и эффектов
+            {isMuted ? '🔇 Звуки отключены' : '🔊 Регулирует звуки кликов, наведения и эффектов'}
           </div>
         </CardContent>
       </Card>
